@@ -1,0 +1,194 @@
+First, I followed the instructions on Moodle to install Hive on HPC.
+Then for loading the tsv files into Hive managed tables, 
+I needed to remove the header from the IMDB tsv files with the follwing command:
+
+sed '1d' name.basics.tsv > names.tsv
+
+I ran the same command for the other three files.
+Then, it was time to load the data into hive managed tables, the script for this 
+can be found in `init.q` (please change the absolute paths to be able to run it)
+
+
+(a)
+
+The query for thsi part can be found in `P1_a.q`. 
+I also filtered on TitleType to get only movies.
+Here is the result after running it with the beeline client on Hive:
+
++-------------+-------------------+--------------+
+|    n.nid    |   director_name   | movie_count  |
++-------------+-------------------+--------------+
+| nm0644554   | Kinya Ogawa       | 87           |
+| nm0462051   | Satoru Kobayashi  | 79           |
+| nm10540950  | Letsdoeit         | 72           |
+| nm0997109   | Minoru Inao       | 66           |
+| nm0183659   | Gérard Courant    | 65           |
+| nm1846347   | Jirô Yoshino      | 57           |
+| nm0627864   | Sam Newfield      | 50           |
+| nm0538632   | Masahiro Makino   | 48           |
+| nm0945487   | Shinya Yamamoto   | 48           |
+| nm1385330   | Sachi Hamano      | 46           |
+| nm0913835   | Mamoru Watanabe   | 45           |
+| nm0457554   | Sakae Nitta       | 44           |
+| nm0861703   | Richard Thorpe    | 43           |
+| nm0628860   | Wui Ng            | 43           |
+| nm0258581   | Ülkü Erakalin     | 42           |
+| nm0001238   | Jesús Franco      | 40           |
+| nm0383255   | Kaoru Umezawa     | 40           |
+| nm2361543   | Shirô Nakagawa    | 39           |
+| nm0064415   | William Beaudine  | 39           |
+| nm0913829   | Kunio Watanabe    | 38           |
+| nm0756872   | Torajirô Saitô    | 38           |
+| nm0793622   | Yasujirô Shimazu  | 36           |
+| nm1375239   | Oguz Gözen        | 36           |
+| nm0091380   | Carl Boese        | 36           |
+| nm0549838   | Artemio Marquez   | 36           |
++-------------+-------------------+--------------+
+25 rows selected (189.994 seconds)
+
+
+(b)
+
+The query for this part can be found in `P1_b.q`.
+I also filtered on TitleType to get only movies. (I was surprised not to see Harry Potter crew in the resutls 
+but then I checked and in the source file and the type is tvEpisode for some reason)
+
++-------------------------+-------------+----------------------+-------------+----------------------+
+|       actor1_name       | actor1_nid  |     actor2_name      | actor2_nid  | co_occurrence_count  |
++-------------------------+-------------+----------------------+-------------+----------------------+
+| Adoor Bhasi             | nm0006982   | Bahadur              | nm0046850   | 11                   |
+| Ying Cheung             | nm1138888   | Yin Pak              | nm1720239   | 11                   |
+| K.S. Ashwath            | nm1154608   | T.N. Balakrishna     | nm3183374   | 10                   |
+| Tanikella Bharani       | nm0080238   | Brahmanandam         | nm0103977   | 8                    |
+| Bahadur                 | nm0046850   | Jayabharathi         | nm0419653   | 8                    |
+| Adoor Bhasi             | nm0006982   | Jayabharathi         | nm0419653   | 7                    |
+| Mohammad Ali            | nm0019382   | Brahmanandam         | nm0103977   | 7                    |
+| Mustafa Qureshi         | nm0704549   | Sultan Rahi          | nm0706691   | 7                    |
+| Matsunosuke Onoe        | nm0648803   | Kijaku Ôtani         | nm2082516   | 7                    |
+| Pandari Bai             | nm0659250   | K.S. Ashwath         | nm1154608   | 6                    |
+| Kijaku Ôtani            | nm2082516   | Kitsuraku Arashi     | nm2373718   | 6                    |
+| Bud Abbott              | nm0007941   | Lou Costello         | nm0182579   | 6                    |
+| Adoor Bhasi             | nm0006982   | Kaduvakkulam Antony  | nm2133977   | 6                    |
+| Brahmanandam            | nm0103977   | Rajendra Prasad      | nm0707399   | 6                    |
+| N.T. Rama Rao           | nm0004417   | Anjali Devi          | nm0222432   | 6                    |
+| Nagesh                  | nm0619309   | Major Sundarrajan    | nm1139300   | 6                    |
+| Ritoku Arashi           | nm2366585   | Shôzô Arashi         | nm2367854   | 6                    |
+| Sultan Rahi             | nm0706691   | Naghma               | nm2935882   | 6                    |
+| Matsunosuke Onoe        | nm0648803   | Kitsuraku Arashi     | nm2373718   | 6                    |
+| Akkineni Nageswara Rao  | nm0004463   | Savitri              | nm0767800   | 6                    |
+| Cho-Fan Ng              | nm0628736   | Yin Pak              | nm1720239   | 6                    |
+| Misao Satsuki           | nm2396189   | Masao Ômura          | nm2681040   | 5                    |
+| Teruko Sanjô            | nm2885510   | Sôzabruô Matsuyama   | nm2885848   | 5                    |
+| Shivaji Ganesan         | nm0304262   | K. Balaji            | nm1163202   | 5                    |
+| Luis Gonzales           | nm0327861   | Gloria Romero        | nm0739418   | 5                    |
++-------------------------+-------------+----------------------+-------------+----------------------+
+25 rows selected (738.593 seconds)
+
+(c)
+
+The query for this part can be found in `P1_c.q`.
+I would put the first 100 rows of the resutls here:
+
++--------------------------------------+-------------+------------------------------+-------------+----------------------+
+|             actor1_name              | actor1_nid  |         actor2_name          | actor2_nid  | co_occurrence_count  |
++--------------------------------------+-------------+------------------------------+-------------+----------------------+
+| Adoor Bhasi                          | nm0006982   | Jayabharathi                 | nm0419653   | 125                  |
+| Adoor Bhasi                          | nm0006982   | Thikkurissy Sukumaran Nair   | nm0619779   | 65                   |
+| R. Krishnan                          | nm0471487   | S. Panju                     | nm0659549   | 59                   |
+| Sultan Rahi                          | nm0706691   | Rangeela                     | nm0710057   | 55                   |
+| Kota Srinivasa Rao                   | nm0004469   | Brahmanandam                 | nm0103977   | 51                   |
+| Sultan Rahi                          | nm0706691   | Firdous                      | nm1164544   | 47                   |
+| Choi Eun-hie                         | nm0158804   | Shin Sang-ok                 | nm0645661   | 41                   |
+| Takeo Azuma                          | nm2394215   | Masao Ômura                  | nm2681040   | 39                   |
+| Prem Nazir                           | nm0623427   | Sheela                       | nm0790659   | 35                   |
+| Johnny Mack Brown                    | nm0113902   | Lambert Hillyer              | nm0385171   | 34                   |
+| Sapna Sappu                          | nm0764598   | Kanti Shah                   | nm1328135   | 33                   |
+| Adoor Bhasi                          | nm0006982   | P. Bhaskaran                 | nm0080279   | 32                   |
+| Eddie Garcia                         | nm0305182   | Vic Vargas                   | nm0889928   | 31                   |
+| Adoor Bhasi                          | nm0006982   | Kottarakkara Sridharan Nair  | nm0619758   | 31                   |
+| Shigehiro Ozawa                      | nm0654725   | Kôji Tsuruta                 | nm0875465   | 30                   |
+| Tak-Hing Kwan                        | nm0477107   | Yin Yam                      | nm1862565   | 29                   |
+| Prasenjit Chatterjee                 | nm0154146   | Subhendu Chatterjee          | nm0154166   | 29                   |
+| Tat-Wah Tso                          | nm0158656   | Yin Yam                      | nm1862565   | 28                   |
+| Sultan Rahi                          | nm0706691   | Sudhir                       | nm2462840   | 28                   |
+| Seizaburô Kawazu                     | nm0442951   | Masahiro Makino              | nm0538632   | 28                   |
+| Chor-San Wong                        | nm0398977   | Suet-Fei Leong               | nm5985135   | 28                   |
+| Kim Soo-yong                         | nm0453678   | Shin Seong-il                | nm0793813   | 28                   |
+| Yaeko Utagawa                        | nm0882485   | Yôyô Kojima                  | nm1293128   | 28                   |
+| Prem Nazir                           | nm0623427   | K.P. Ummer                   | nm0880893   | 27                   |
+| Mohammad Motevaselani                | nm0609330   | Mansour Sepehrnia            | nm1182418   | 27                   |
+| Yuri Izumi                           | nm1001108   | Ken'ichirô Sugiyama          | nm5083230   | 27                   |
+| Sultan Rahi                          | nm0706691   | Iqbal Hassan                 | nm3806554   | 27                   |
+| Romy Diaz                            | nm0225042   | George Estregan              | nm0261738   | 27                   |
+| Jigna Bhardwaj                       | nm5598807   | Rajesh Kava                  | nm5598824   | 27                   |
+| Adoor Bhasi                          | nm0006982   | Sheela                       | nm0790659   | 27                   |
+| A. Kodandarami Reddy                 | nm0004630   | Chiranjeevi                  | nm0158112   | 26                   |
+| Won Namkung                          | nm0938860   | Yun Jeong-hie                | nm0950902   | 26                   |
+| Chiranjeevi                          | nm0158112   | Raogopalrao                  | nm0710623   | 26                   |
+| Supriya Choudhury                    | nm0159350   | Uttam Kumar                  | nm0474907   | 26                   |
+| Josephine Siao                       | nm0796196   | Connie Chan                  | nm1071598   | 26                   |
+| Sobhan Babu                          | nm0004576   | Vanisri                      | nm0889148   | 26                   |
+| Niazi Mostafa                        | nm0609200   | Farid Shawqi                 | nm0790096   | 25                   |
+| Daisuke Katô                         | nm0441961   | Keiju Kobayashi              | nm0462013   | 25                   |
+| Richard Eichberg                     | nm0251456   | Lee Parry                    | nm0675160   | 25                   |
+| Jigna Bhardwaj                       | nm5598807   | Rupa Bhimani                 | nm6078715   | 25                   |
+| Simon Minter                         | nm7158706   | Harry Lewis                  | nm7158710   | 25                   |
+| Jang-kang Heo                        | nm1065460   | No-shik Park                 | nm1066229   | 25                   |
+| Tony Ferrer                          | nm0274628   | Victor Bravo                 | nm1047761   | 25                   |
+| Shintarô Katsu                       | nm0441526   | Tokuzô Tanaka                | nm0849080   | 24                   |
+| Sultan Rahi                          | nm0706691   | Saloni                       | nm1167414   | 23                   |
+| Debra Rixon                          | nm1644256   | David Rixon                  | nm1645815   | 23                   |
+| Chung-Ho Hung                        | nm0393277   | Chor-San Wong                | nm0398977   | 23                   |
+| Chieko Misaki                        | nm0592654   | Yôji Yamada                  | nm0945282   | 23                   |
+| Adoor Bhasi                          | nm0006982   | K.P. Ummer                   | nm0880893   | 23                   |
+| Jayabharathi                         | nm0419653   | Thikkurissy Sukumaran Nair   | nm0619779   | 22                   |
+| Kanjûrô Arashi                       | nm0033136   | Tokusaburô Arashi            | nm0033140   | 22                   |
+| Anil Nagrath                         | nm1031555   | Kanti Shah                   | nm1328135   | 22                   |
+| Adoor Bhasi                          | nm0006982   | T.R. Omana                   | nm0648300   | 22                   |
+| Kanjûrô Arashi                       | nm0033136   | Keinosuke Tôyama             | nm2461989   | 22                   |
+| Ambarish                             | nm0024259   | T.N. Balakrishna             | nm3183374   | 22                   |
+| Chor-San Wong                        | nm0398977   | Siu-Ying Chow                | nm5646207   | 21                   |
+| Sultan Rahi                          | nm0706691   | Haider Chaudhry              | nm3002796   | 21                   |
+| Taisuke Matsumoto                    | nm1272494   | Yôyô Kojima                  | nm1293128   | 21                   |
+| K.R. Vijaya                          | nm0433887   | Jaishankar                   | nm1126254   | 21                   |
+| Bhanu Bannerjee                      | nm0052322   | Nripati Chatterjee           | nm0154142   | 21                   |
+| France Dhélia                        | nm0223616   | Gaston Roudès                | nm0745577   | 21                   |
+| Rajesh Kava                          | nm5598824   | Rupa Bhimani                 | nm6078715   | 20                   |
+| Shintarô Katsu                       | nm0441526   | Kenji Misumi                 | nm0593014   | 20                   |
+| Mayumi Sanjô                         | nm1001836   | Ken'ichirô Sugiyama          | nm5083230   | 20                   |
+| Milind Gunaji                        | nm0348004   | Mohan Joshi                  | nm0430803   | 20                   |
+| Chung-Ho Hung                        | nm0393277   | Suet-Fei Leong               | nm5985135   | 20                   |
+| Raúl de Anda Jr.                     | nm0025870   | Rodolfo de Anda              | nm0207023   | 20                   |
+| Nello Nayo                           | nm0623312   | Fernando Poe Jr.             | nm0688093   | 20                   |
+| Mayumi Sanjô                         | nm1001836   | Keiko Hama                   | nm5079417   | 20                   |
+| Yûichi Minato                        | nm0590985   | Masayoshi Nogami             | nm0619107   | 20                   |
+| Adoor Bhasi                          | nm0006982   | Khadeeja                     | nm0451005   | 20                   |
+| Eddie Garcia                         | nm0305182   | Victor Bravo                 | nm1047761   | 20                   |
+| Chiyonosuke Azuma                    | nm0044445   | Yasushi Sasaki               | nm0765832   | 19                   |
+| Jacob Fleck                          | nm0281383   | Max Neufeld                  | nm0626885   | 19                   |
+| Taisuke Matsumoto                    | nm1272494   | Ginchô Segawa                | nm1413391   | 19                   |
+| Adoor Bhasi                          | nm0006982   | M.S. Mani                    | nm0542339   | 19                   |
+| Yaeko Utagawa                        | nm0882485   | Kaku Hamada                  | nm1481266   | 19                   |
+| Mykola Yeriomin                      | nm4087886   | Sergey A.                    | nm5954636   | 19                   |
+| Allu Ramalingaiah                    | nm0707972   | Raogopalrao                  | nm0710623   | 19                   |
+| Giannis Dalianidis                   | nm0197929   | Kostas Voutsas               | nm0903866   | 19                   |
+| Matt Tremont                         | nm4889661   | Mark Angelosetti             | nm5653659   | 18                   |
+| Rajkumar R. Pandey                   | nm2183395   | Pradeep Pandey               | nm7463695   | 18                   |
+| Jamie Gillis                         | nm0003501   | Marc Stevens                 | nm0828583   | 18                   |
+| Adoor Bhasi                          | nm0006982   | T.K. Balachandran            | nm1901236   | 18                   |
+| Shinobu Araki                        | nm0032900   | Masahiro Makino              | nm0538632   | 18                   |
+| Po-Chuen Chu                         | nm0160871   | Suet-Fei Leong               | nm5985135   | 18                   |
+| Adoor Bhasi                          | nm0006982   | Kunchan                      | nm0475070   | 18                   |
+| Hiroko Kawasaki                      | nm0442886   | Hiroshi Shimizu              | nm0793646   | 18                   |
+| Hibari Misora                        | nm0592882   | Yasushi Sasaki               | nm0765832   | 17                   |
+| Darby Lloyd Rains                    | nm0707145   | Marc Stevens                 | nm0828583   | 17                   |
+| Ejaz Durrani                         | nm0244333   | Firdous                      | nm1164544   | 17                   |
+| Im Kwon-taek                         | nm0407990   | Kim Hee-ra                   | nm0453472   | 17                   |
+| Jun Arai                             | nm1263070   | Takeo Azuma                  | nm2394215   | 17                   |
+| Kumahiko Nishina                     | nm1585800   | Tarô Bandô                   | nm1697078   | 17                   |
+| Jaturong Mokjok                      | nm1979074   | Kohtee Aramboy               | nm1993163   | 17                   |
+| Teijirô Tachibana                    | nm1196616   | Masao Ômura                  | nm2681040   | 17                   |
+| Prasenjit Chatterjee                 | nm0154146   | Rituparna Sengupta           | nm0784292   | 17                   |
+| Shirô Shimomoto                      | nm0793731   | Mamoru Watanabe              | nm0913835   | 17                   |
+| Kim Soo-yong                         | nm0453678   | Yun Jeong-hie                | nm0950902   | 17                   |
+| Man-Lei Wong                         | nm0939233   | Ying Cheung                  | nm1138888   | 17                   |
