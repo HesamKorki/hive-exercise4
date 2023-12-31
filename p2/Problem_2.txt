@@ -1,0 +1,42 @@
+(a)
+
+The commands I ran through the beeline client is available in the file 
+`P2_a.q`. First, I created two external tables for the tsv files then two 
+clustered tables. Lastly, we loaded data from the external table to the clustered 
+tables which took some time since the buckets are sorted by nconst.
+
+This is the result of the describe on the names_clustered table:
++-----------------------------+----------------------------------------------------+----------+
+|          col_name           |                     data_type                      | comment  |
++-----------------------------+----------------------------------------------------+----------+
+| nconst                      | string                                             |          |
+| primaryname                 | string                                             |          |
+| birthyear                   | int                                                |          |
+| deathyear                   | int                                                |          |
+| primaryprofession           | string                                             |          |
+| knownfortitles              | string                                             |          |
+|                             | NULL                                               | NULL     |
+| Detailed Table Information  | Table(tableName:name_basics_clustered, dbName:default, owner:dataflair, createTime:1704026636, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:nconst, type:string, comment:null), FieldSchema(name:primaryname, type:string, comment:null), FieldSchema(name:birthyear, type:int, comment:null), FieldSchema(name:deathyear, type:int, comment:null), FieldSchema(name:primaryprofession, type:string, comment:null), FieldSchema(name:knownfortitles, type:string, comment:null)], location:file:/mnt/irisgpfs/users/hkorki/hive_tables/names_clustered, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat, compressed:false, numBuckets:8, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[nconst], sortCols:[Order(col:nconst, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{totalSize=791858005, numRows=13023618, rawDataSize=778834387, COLUMN_STATS_ACCURATE={\"BASIC_STATS\":\"true\",\"COLUMN_STATS\":{\"birthyear\":\"true\",\"deathyear\":\"true\",\"knownfortitles\":\"true\",\"nconst\":\"true\",\"primaryname\":\"true\",\"primaryprofession\":\"true\"}}, numFiles=8, transient_lastDdlTime=1704026855, bucketing_version=2, SORTBUCKETCOLSPREFIX=TRUE}, viewOriginalText:null, viewExpandedText:null, tableType:MANAGED_TABLE, rewriteEnabled:false, catName:hive, ownerType:USER) |          |
++-----------------------------+----------------------------------------------------+----------+
+8 rows selected (0.219 seconds)
+
+This is the describe of principals clustered table:
++-----------------------------+----------------------------------------------------+----------+
+|          col_name           |                     data_type                      | comment  |
++-----------------------------+----------------------------------------------------+----------+
+| tconst                      | string                                             |          |
+| ordering                    | int                                                |          |
+| nconst                      | string                                             |          |
+| category                    | string                                             |          |
+| job                         | string                                             |          |
+| characters                  | string                                             |          |
+|                             | NULL                                               | NULL     |
+| Detailed Table Information  | Table(tableName:title_principals_clustered, dbName:default, owner:dataflair, createTime:1704026712, lastAccessTime:0, retention:0, sd:StorageDescriptor(cols:[FieldSchema(name:tconst, type:string, comment:null), FieldSchema(name:ordering, type:int, comment:null), FieldSchema(name:nconst, type:string, comment:null), FieldSchema(name:category, type:string, comment:null), FieldSchema(name:job, type:string, comment:null), FieldSchema(name:characters, type:string, comment:null)], location:file:/mnt/irisgpfs/users/hkorki/hive_tables/principals_clustered, inputFormat:org.apache.hadoop.mapred.TextInputFormat, outputFormat:org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat, compressed:false, numBuckets:8, serdeInfo:SerDeInfo(name:null, serializationLib:org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe, parameters:{serialization.format=1}), bucketCols:[nconst], sortCols:[Order(col:nconst, order:1)], parameters:{}, skewedInfo:SkewedInfo(skewedColNames:[], skewedColValues:[], skewedColValueLocationMaps:{}), storedAsSubDirectories:false), partitionKeys:[], parameters:{totalSize=2605646894, numRows=59150423, rawDataSize=2546496471, COLUMN_STATS_ACCURATE={\"BASIC_STATS\":\"true\",\"COLUMN_STATS\":{\"category\":\"true\",\"characters\":\"true\",\"job\":\"true\",\"nconst\":\"true\",\"ordering\":\"true\",\"tconst\":\"true\"}}, numFiles=8, transient_lastDdlTime=1704027269, bucketing_version=2, SORTBUCKETCOLSPREFIX=TRUE}, viewOriginalText:null, viewExpandedText:null, tableType:MANAGED_TABLE, rewriteEnabled:false, catName:hive, ownerType:USER) |          |
++-----------------------------+----------------------------------------------------+----------+
+8 rows selected (0.12 seconds)
+
+Listing the files of the warehouse directory, for the external files we just see 
+the tsv file and a hidden file '.file_name.tsv.crc`. However, the clustered tables 
+directory have 8 files (as much as the buckets):
+000000_0  000002_0  000004_0  000006_0
+000001_0  000003_0  000005_0  000007_0
